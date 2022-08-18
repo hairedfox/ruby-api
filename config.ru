@@ -1,5 +1,8 @@
 require 'rack'
 require 'rack/handler/puma'
+require 'sequel'
+
+db = Sequel.connect('sqlite://db/schema.db')
 
 app = -> environment {
   request = Rack::Request.new(environment)
