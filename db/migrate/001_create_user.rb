@@ -1,9 +1,13 @@
-require 'sequel'
+require_relative('./000_migrate_base.rb')
 
-db = Sequel.connect('sqlite://db/schema.db')
-
-db.create_table :users do
-  primary_key :id
-  String :email
-  String :password_digest
+class CreateUser < MigrateBase
+  def self.call
+    db.create_table :users do
+      primary_key :id
+      String :username, size: 100, unique: true
+      String :ip_address, size: 15
+    end
+  end
 end
+
+CreateUser.call
