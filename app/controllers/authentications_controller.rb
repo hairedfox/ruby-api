@@ -1,5 +1,4 @@
 class AuthenticationsController < BaseController
-  require 'dotenv/load'
   require_relative '../../lib/json_web_token.rb'
   require_relative '../models/errors/not_found.rb'
   require_relative '../models/user.rb'
