@@ -5,14 +5,25 @@ GEM
     concurrent-ruby (1.1.10)
     diff-lcs (1.5.0)
     dotenv (2.8.1)
+    dry-configurable (0.15.0)
+      concurrent-ruby (~> 1.0)
+      dry-core (~> 0.6)
     dry-container (0.10.1)
       concurrent-ruby (~> 1.0)
     dry-core (0.8.1)
       concurrent-ruby (~> 1.0)
     dry-inflector (0.3.0)
+    dry-initializer (3.1.1)
     dry-logic (1.2.0)
       concurrent-ruby (~> 1.0)
       dry-core (~> 0.5, >= 0.5)
+    dry-schema (1.10.2)
+      concurrent-ruby (~> 1.0)
+      dry-configurable (~> 0.13, >= 0.13.0)
+      dry-core (~> 0.5, >= 0.5)
+      dry-initializer (~> 3.0)
+      dry-logic (~> 1.0)
+      dry-types (~> 1.5)
     dry-struct (1.4.0)
       dry-core (~> 0.5, >= 0.5)
       dry-types (~> 1.5)
@@ -23,6 +34,12 @@ GEM
       dry-core (~> 0.5, >= 0.5)
       dry-inflector (~> 0.1, >= 0.1.2)
       dry-logic (~> 1.0, >= 1.0.2)
+    dry-validation (1.8.1)
+      concurrent-ruby (~> 1.0)
+      dry-container (~> 0.7, >= 0.7.1)
+      dry-core (~> 0.5, >= 0.5)
+      dry-initializer (~> 3.0)
+      dry-schema (~> 1.8, >= 1.8.0)
     faker (2.22.0)
       i18n (>= 1.8.11, < 2)
     i18n (1.12.0)
@@ -55,6 +72,7 @@ PLATFORMS
 DEPENDENCIES
   dotenv
   dry-struct
+  dry-validation
   faker
   jwt
   pg
