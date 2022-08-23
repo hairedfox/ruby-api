@@ -3,7 +3,6 @@ require 'json'
 require_relative '../../app/controllers/base_controller.rb'
 require_relative '../../app/controllers/authentications_controller.rb'
 require_relative '../../app/models/user.rb'
-require_relative '../../config/application.rb'
 
 RSpec.describe AuthenticationsController, type: :controller do
   let(:user) do
