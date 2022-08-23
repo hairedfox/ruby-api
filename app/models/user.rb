@@ -3,16 +3,27 @@ require_relative '../utils/global_actions.rb'
 require_relative '../utils/types.rb'
 
 class User < Dry::Struct
-  include GlobalActions
-
   attribute :username, Types::String
   attribute :ip_address, Types::String
 
-  def save
-    db = select_database
-    users = db[:users]
+  class << self
+    include GlobalActions
 
-    users.insert(username:, ip_address:)
+    def find_by_username(username)
+      collection.where(username:).first
+    end
+
+    def collection
+      @collection ||= db[:users]
+    end
+
+    def db
+      @db ||= select_database
+    end
+  end
+
+  def save
+    self.class.collection.insert(username:, ip_address:)
 
     true
   end
