@@ -13,6 +13,6 @@ class AuthorizationService
   def call
     payload = JsonWebToken.decode(token)
 
-    User.find(payload[:id]) if payload
+    User.find(payload['id']) if payload
   end
 end

@@ -9,6 +9,10 @@ class User < Dry::Struct
   class << self
     include GlobalActions
 
+    def find(id)
+      collection.where(id:).first
+    end
+
     def find_by_username(username)
       collection.where(username:).first
     end

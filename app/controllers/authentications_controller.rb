@@ -8,7 +8,7 @@ class AuthenticationsController < BaseController
 
     raise NotFound, 'user_not_found' unless user
 
-    access_token = JsonWebToken.encode({ username: user[:username] })
+    access_token = JsonWebToken.encode({ id: user[:id] })
 
     response_with(code: 200, data: [{ access_token: access_token }.to_json])
   rescue NotFound => e

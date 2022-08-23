@@ -1,5 +1,4 @@
 require 'rack'
-require 'json'
 require 'faker'
 require_relative '../../app/controllers/base_controller.rb'
 require_relative '../../app/controllers/authentications_controller.rb'
@@ -25,7 +24,7 @@ RSpec.describe AuthenticationsController, type: :controller do
 
       expect(response[0]).to eq(200)
       expect(response[1]).to eq({ 'Content-Type' => 'application/json' })
-      expect(JSON.parse(response[2][0])).to match({ 'access_token' => anything })
+      expect(JSON.parse(response.dig(2, 0).to_s)).to match({ 'access_token' => anything })
     end
   end
 
