@@ -2,15 +2,37 @@ require 'rack'
 require 'rack/handler/puma'
 require 'sequel'
 require 'json'
+require 'pry'
 
-db = Sequel.connect('sqlite://db/schema.db')
+require_relative './app/controllers/base_controller.rb'
+Dir[File.join(__dir__, 'app', 'controllers', '**/*.rb')].each { |file| require file }
+
+db = Sequel.connect(ENV['DB_URL'])
 
 def handle_requests(request)
-  case [request.env['REQUEST_METHOD'], request.path]
-  when ['POST', '/sessions']
-    # TODO: Handle user login here
+  path = request.path.dup.delete_prefix('/')
+
+  method = request.env['REQUEST_METHOD']
+  controller = "#{path.split('/').first.capitalize}Controller"
+  controller_klass = Object.const_get(controller)
+
+  action = retrieve_action(method, path)
+
+  controller_klass.new(request).public_send(action)
+end
+
+def retrieve_action(method, path)
+  case true
+  when method == 'POST' && path.match?(/^\w+\/$/)
+    'create'
+  when method == 'PUT' && path.match?(/^\w+\/\d+\/$/)
+    'update'
+  when method == 'GET' && path.match?(/^\w+\/$/)
+    'index'
+  when method == 'GET' && path.match?(/^\w+\/\d+\/$/)
+    'show'
   else
-    [200, {'Content-Type' => 'application/json'}, [{}.to_json]]
+    File.basename(path)
   end
 end
 
