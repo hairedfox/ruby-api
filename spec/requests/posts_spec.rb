@@ -38,6 +38,7 @@ RSpec.describe PostsController, type: :request do
       )
       response = PostsController.new(request).create
 
+      expect(response[0]).to eq(200)
       expect(Post.count).to eq(count + 1)
       expect(JSON.parse(response[2][0])).to match(
         {
@@ -63,6 +64,7 @@ RSpec.describe PostsController, type: :request do
       )
       response = PostsController.new(request).create
 
+      expect(response[0]).to eq(422)
       expect(Post.count).to eq(count)
       expect(JSON.parse(response[2][0])).to match(
         {
@@ -87,6 +89,7 @@ RSpec.describe PostsController, type: :request do
       )
       response = PostsController.new(request).create
 
+      expect(response[0]).to eq(422)
       expect(Post.count).to eq(count)
       expect(JSON.parse(response[2][0])).to match(
         {
