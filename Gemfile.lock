@@ -2,13 +2,51 @@ GEM
   remote: https://rubygems.org/
   specs:
     coderay (1.1.3)
+    concurrent-ruby (1.1.10)
+    diff-lcs (1.5.0)
     dotenv (2.8.1)
+    dry-container (0.10.1)
+      concurrent-ruby (~> 1.0)
+    dry-core (0.8.1)
+      concurrent-ruby (~> 1.0)
+    dry-inflector (0.3.0)
+    dry-logic (1.2.0)
+      concurrent-ruby (~> 1.0)
+      dry-core (~> 0.5, >= 0.5)
+    dry-struct (1.4.0)
+      dry-core (~> 0.5, >= 0.5)
+      dry-types (~> 1.5)
+      ice_nine (~> 0.11)
+    dry-types (1.5.1)
+      concurrent-ruby (~> 1.0)
+      dry-container (~> 0.3)
+      dry-core (~> 0.5, >= 0.5)
+      dry-inflector (~> 0.1, >= 0.1.2)
+      dry-logic (~> 1.0, >= 1.0.2)
+    faker (2.22.0)
+      i18n (>= 1.8.11, < 2)
+    i18n (1.12.0)
+      concurrent-ruby (~> 1.0)
+    ice_nine (0.11.2)
     jwt (2.4.1)
     method_source (1.0.0)
     pg (1.4.3)
     pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
+    rspec (3.11.0)
+      rspec-core (~> 3.11.0)
+      rspec-expectations (~> 3.11.0)
+      rspec-mocks (~> 3.11.0)
+    rspec-core (3.11.0)
+      rspec-support (~> 3.11.0)
+    rspec-expectations (3.11.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.11.0)
+    rspec-mocks (3.11.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.11.0)
+    rspec-support (3.11.0)
     sequel (5.59.0)
 
 PLATFORMS
@@ -16,9 +54,12 @@ PLATFORMS
 
 DEPENDENCIES
   dotenv
+  dry-struct
+  faker
   jwt
   pg
   pry
+  rspec
   sequel
 
 BUNDLED WITH

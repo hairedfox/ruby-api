@@ -1,13 +1,15 @@
-require_relative('./000_migrate_base.rb')
+require 'sequel'
 
-class CreateUser < MigrateBase
-  def self.call
-    db.create_table :users do
+Sequel.migration do
+  up do
+    create_table(:users) do
       primary_key :id
       String :username, size: 100, unique: true
-      String :ip_address, size: 15
+      String :ip_address
     end
   end
-end
 
-CreateUser.call
+  down do
+    drop_table(:users)
+  end
+end
