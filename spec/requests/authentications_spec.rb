@@ -1,5 +1,6 @@
 require 'rack'
 require 'json'
+require 'faker'
 require_relative '../../app/controllers/base_controller.rb'
 require_relative '../../app/controllers/authentications_controller.rb'
 require_relative '../../app/models/user.rb'

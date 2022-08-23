@@ -9,8 +9,9 @@ class AuthenticationsController < BaseController
     raise NotFound, 'user_not_found' unless user
 
     access_token = JsonWebToken.encode({ username: user[:username] })
-    [200, { 'Content-Type' => 'application/json' }, [{ access_token: access_token }.to_json]]
+
+    response_with(code: 200, data: [{ access_token: access_token }.to_json])
   rescue NotFound => e
-    [404, { 'Content-Type' => 'application/json' }, [{ error: e.message }.to_json]]
+    response_with(code: 404, data: [{ error: e.message }.to_json])
   end
 end
