@@ -49,4 +49,52 @@ RSpec.describe PostsController, type: :request do
       )
     end
   end
+
+  context 'when the title is empty' do
+    it 'returns the validation error with status 422' do
+      count = Post.count
+      request = instance_double(Rack::Request)
+      allow(request).to receive_message_chain(:env, :[], :split, :[]).and_return(token)
+      allow(request).to receive_message_chain(:body, :readlines, :join).and_return(
+        {
+          title: '',
+          content: 'sample content'
+        }.to_json
+      )
+      response = PostsController.new(request).create
+
+      expect(Post.count).to eq(count)
+      expect(JSON.parse(response[2][0])).to match(
+        {
+          'errors' => {
+            'title' => ['must be present']
+          }
+        }
+      )
+    end
+  end
+
+  context 'when the content is empty' do
+    it 'returns the validation error with status 422' do
+      count = Post.count
+      request = instance_double(Rack::Request)
+      allow(request).to receive_message_chain(:env, :[], :split, :[]).and_return(token)
+      allow(request).to receive_message_chain(:body, :readlines, :join).and_return(
+        {
+          title: 'Test title',
+          content: ''
+        }.to_json
+      )
+      response = PostsController.new(request).create
+
+      expect(Post.count).to eq(count)
+      expect(JSON.parse(response[2][0])).to match(
+        {
+          'errors' => {
+            'content' => ['must be present']
+          }
+        }
+      )
+    end
+  end
 end

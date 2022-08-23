@@ -10,6 +10,10 @@ module Contracts
         required(:user_id).value(:integer)
       end
 
+      rule(:title) do
+        key.failure('must be present') if value.size == 0
+      end
+
       rule(:content) do
         key.failure('must be present') if value.size == 0
       end
