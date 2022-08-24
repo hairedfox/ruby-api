@@ -5,6 +5,7 @@ require_relative '../../app/controllers/authentications_controller.rb'
 require_relative '../../app/models/user.rb'
 
 RSpec.describe AuthenticationsController, type: :controller do
+  let(:request) { instance_double(Rack::Request) }
   let(:user) do
     user = User.new(
       username: Faker::Internet.unique.username,
@@ -17,9 +18,13 @@ RSpec.describe AuthenticationsController, type: :controller do
   end
 
   describe '#create' do
+    before do
+      allow(request).to receive(:env).and_return({ 'REQUEST_METHOD' => 'POST' })
+      allow(request).to receive(:params).and_return({})
+    end
+
     context 'when the username is correct' do
       it 'returns the access_token' do
-        request = instance_double(Rack::Request)
         allow(request).to receive_message_chain(:body, :readlines, :join).and_return({ 'username' => user.username }.to_json)
         response = AuthenticationsController.new(request).create
 
@@ -31,7 +36,6 @@ RSpec.describe AuthenticationsController, type: :controller do
 
     context 'when the username is wrong' do
       it 'returns 404' do
-        request = instance_double(Rack::Request)
         allow(request).to receive_message_chain(:body, :readlines, :join).and_return({ 'username' => 'sample name' }.to_json)
         response = AuthenticationsController.new(request).create
 

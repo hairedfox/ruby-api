@@ -1,11 +1,13 @@
 require 'rack'
 require 'faker'
 require_relative '../../app/controllers/base_controller.rb'
+require_relative '../../app/controllers/authentications_controller.rb'
 require_relative '../../app/controllers/posts_controller.rb'
 require_relative '../../app/models/user.rb'
 require_relative '../../app/models/post.rb'
 
 RSpec.describe PostsController, type: :request do
+  let(:request) { instance_double(Rack::Request) }
   let(:user) do
     user = User.new(
       username: Faker::Internet.unique.username,
@@ -18,26 +20,33 @@ RSpec.describe PostsController, type: :request do
   end
 
   let(:token) do
-    request = instance_double(Rack::Request)
     allow(request).to receive_message_chain(:body, :readlines, :join).and_return({ username: user[:username] }.to_json)
     response = AuthenticationsController.new(request).create
 
     JSON.parse(response.dig(2, 0).to_s)['access_token']
   end
 
+  describe '#index' do
+    before do
+      allow(request).to receive(:env).and_return({ 'REQUEST_METHOD' => 'GET' })
+      allow(request).to receive(:params).and_return({})
+    end
+  end
+
   describe '#create' do
+    before do
+      allow(request).to receive(:env).and_return({ 'REQUEST_METHOD' => 'POST' })
+      allow(request).to receive(:params).and_return({})
+    end
+
     context 'when the title and the content are filled' do
       it 'returns the post attributes with 200 status' do
         count = Post.count
-        request = instance_double(Rack::Request)
-        allow(request).to receive_message_chain(:env, :[], :split, :[]).and_return(token)
-        allow(request).to receive_message_chain(:body, :readlines, :join).and_return(
-          {
-            title: 'Test title',
-            content: 'Test content'
-          }.to_json
-        )
-        response = PostsController.new(request).create
+
+        response = create_post_with_data(data: {
+          title: 'Test title',
+          content: 'Test content'
+        })
 
         expect(response[0]).to eq(200)
         expect(Post.count).to eq(count + 1)
@@ -55,15 +64,10 @@ RSpec.describe PostsController, type: :request do
     context 'when the title is empty' do
       it 'returns the validation error with status 422' do
         count = Post.count
-        request = instance_double(Rack::Request)
-        allow(request).to receive_message_chain(:env, :[], :split, :[]).and_return(token)
-        allow(request).to receive_message_chain(:body, :readlines, :join).and_return(
-          {
-            title: '',
-            content: 'sample content'
-          }.to_json
-        )
-        response = PostsController.new(request).create
+        response = create_post_with_data(data: {
+          title: '',
+          content: 'sample content'
+        })
 
         expect(response[0]).to eq(422)
         expect(Post.count).to eq(count)
@@ -80,15 +84,11 @@ RSpec.describe PostsController, type: :request do
     context 'when the content is empty' do
       it 'returns the validation error with status 422' do
         count = Post.count
-        request = instance_double(Rack::Request)
-        allow(request).to receive_message_chain(:env, :[], :split, :[]).and_return(token)
-        allow(request).to receive_message_chain(:body, :readlines, :join).and_return(
-          {
-            title: 'Test title',
-            content: ''
-          }.to_json
-        )
-        response = PostsController.new(request).create
+
+        response = create_post_with_data(data: {
+          title: 'Test title',
+          content: ''
+        })
 
         expect(response[0]).to eq(422)
         expect(Post.count).to eq(count)
@@ -102,4 +102,12 @@ RSpec.describe PostsController, type: :request do
       end
     end
   end
+end
+
+def create_post_with_data(data:)
+  allow(request).to receive_message_chain(:env, :[], :split, :[]).and_return(token)
+  allow(request).to receive_message_chain(:body, :readlines, :join).and_return(
+    data.to_json
+  )
+  PostsController.new(request).create
 end

@@ -5,11 +5,12 @@ require_relative '../models/errors/permission_denied.rb'
 class BaseController
   include GlobalActions
 
-  attr_reader :request, :body_params
+  attr_reader :request, :body_params, :query_params
 
   def initialize(request)
     @request = request
-    @body_params = JSON.parse(request.body.readlines.join)
+    @body_params = get? ? {} : JSON.parse(request.body.readlines.join.to_s)
+    @query_params = request.params
   end
 
   def current_user
@@ -23,6 +24,10 @@ class BaseController
   end
 
   private
+
+  def get?
+    request.env['REQUEST_METHOD'] == 'GET'
+  end
 
   def authorize!
     raise PermissionDenied, 'permission_denied' unless current_user

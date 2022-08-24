@@ -8,6 +8,7 @@ require_relative '../../app/models/post.rb'
 require_relative '../../app/models/rating.rb'
 
 RSpec.describe RatingsController, type: :request do
+  let(:request) { instance_double(Rack::Request) }
   let(:user) do
     user = User.new(
       username: Faker::Internet.unique.username,
@@ -46,7 +47,6 @@ RSpec.describe RatingsController, type: :request do
   end
 
   let(:token) do
-    request = instance_double(Rack::Request)
     allow(request).to receive_message_chain(:body, :readlines, :join).and_return({ username: user[:username] }.to_json)
     response = AuthenticationsController.new(request).create
 
@@ -54,6 +54,11 @@ RSpec.describe RatingsController, type: :request do
   end
 
   describe '#create' do
+    before do
+      allow(request).to receive(:env).and_return({ 'REQUEST_METHOD' => 'POST' })
+      allow(request).to receive(:params).and_return({})
+    end
+
     context 'when the post id are correct and rating is valid' do
       it 'returns the current average rating of that post' do
         first_rate = create_rating_with_data(data: {
@@ -143,7 +148,6 @@ RSpec.describe RatingsController, type: :request do
 end
 
 def create_rating_with_data(data:)
-  request = instance_double(Rack::Request)
   allow(request).to receive_message_chain(:env, :[], :split, :[]).and_return(token)
   allow(request).to receive_message_chain(:body, :readlines, :join).and_return(
     data.to_json
