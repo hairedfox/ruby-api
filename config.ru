@@ -1,7 +1,5 @@
 require 'rack'
 require 'rack/handler/puma'
-require 'sequel'
-require 'json'
 
 require_relative('./config/application.rb')
 
