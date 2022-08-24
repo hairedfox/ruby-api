@@ -1,6 +1,7 @@
 require_relative '../services/authorization_service.rb'
 require_relative '../utils/global_actions.rb'
 require_relative '../models/errors/permission_denied.rb'
+require 'pry'
 
 class BaseController
   include GlobalActions
@@ -16,7 +17,6 @@ class BaseController
   def current_user
     @current_user ||= begin
       token = request.env['HTTP_AUTHORIZATION'].split(' ')[1]
-
       AuthorizationService.call(token)
     rescue
       nil

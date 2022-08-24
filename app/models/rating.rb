@@ -13,7 +13,7 @@ class Rating < Dry::Struct
     include GlobalActions
 
     def post_ids_by_avg_rating(limit: 10)
-      limit = limit.is_a?(Integer) ? limit : 10
+      limit = limit.is_a?(Integer) && limit > 0 ? limit : 10
 
       post_ids = db.fetch("SELECT AVG(rating) AS avg_rating, post_id FROM ratings GROUP BY post_id ORDER BY avg_rating DESC").limit(limit)
         .map { |el| el[:post_id] }
