@@ -8,7 +8,7 @@ class PostsController < BaseController
     return error if error
 
     post_ids = Rating.post_ids_by_avg_rating(limit: query_params['limit'].to_i)
-    posts = Post.collection.where(id: post_ids).select(:title, :content).all
+    posts = Post.where(id: post_ids).select(:title, :content).all
 
     response_with(code: 200, data: [posts.to_json])
   end

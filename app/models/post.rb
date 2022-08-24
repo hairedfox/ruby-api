@@ -14,6 +14,10 @@ class Post < Dry::Struct
   class << self
     include GlobalActions
 
+    def where(**args)
+      collection.where(**args)
+    end
+
     def find(id)
       collection.where(id:).first
     end

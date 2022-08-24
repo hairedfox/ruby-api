@@ -12,6 +12,10 @@ class Rating < Dry::Struct
   class << self
     include GlobalActions
 
+    def where(**args)
+      collection.where(**args)
+    end
+
     def post_ids_by_avg_rating(limit: 10)
       limit = limit.is_a?(Integer) && limit > 0 ? limit : 10
 

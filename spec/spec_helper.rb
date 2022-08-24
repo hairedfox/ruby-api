@@ -111,7 +111,7 @@ RSpec.configure do |config|
   config.before(:all) do
     db = Sequel.connect(ENV['TEST_DB_URL'])
 
-    [:ratings, :posts, :users, :feedbacks].each do |table|
+    [:ratings, :posts, :feedbacks, :users].each do |table|
       db.run "DELETE FROM #{table};"
     end
   end

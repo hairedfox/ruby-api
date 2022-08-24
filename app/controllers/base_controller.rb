@@ -1,7 +1,6 @@
 require_relative '../services/authorization_service.rb'
 require_relative '../utils/global_actions.rb'
 require_relative '../models/errors/permission_denied.rb'
-require 'pry'
 
 class BaseController
   include GlobalActions
