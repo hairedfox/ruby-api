@@ -53,89 +53,91 @@ RSpec.describe RatingsController, type: :request do
     JSON.parse(response.dig(2, 0).to_s)['access_token']
   end
 
-  context 'when the post id are correct and rating is valid' do
-    it 'returns the current average rating of that post' do
-      first_rate = create_rating_with_data(data: {
-        post_id: first_post[:id],
-        rating: 5
-      })
+  describe '#create' do
+    context 'when the post id are correct and rating is valid' do
+      it 'returns the current average rating of that post' do
+        first_rate = create_rating_with_data(data: {
+          post_id: first_post[:id],
+          rating: 5
+        })
 
-      second_rate = create_rating_with_data(data: {
-        post_id: first_post[:id],
-        rating: 3
-      })
+        second_rate = create_rating_with_data(data: {
+          post_id: first_post[:id],
+          rating: 3
+        })
 
-      third_rate = create_rating_with_data(data: {
-        post_id: second_post[:id],
-        rating: 5
-      })
+        third_rate = create_rating_with_data(data: {
+          post_id: second_post[:id],
+          rating: 5
+        })
 
-      expect(second_rate[0]).to eq(200)
-      expect(JSON.parse(second_rate[2][0])).to eq(
-        {
-          'avg_rating' => 4.0
-        }
-      )
+        expect(second_rate[0]).to eq(200)
+        expect(JSON.parse(second_rate[2][0])).to eq(
+          {
+            'avg_rating' => 4.0
+          }
+        )
 
-      expect(third_rate[0]).to eq(200)
-      expect(JSON.parse(third_rate[2][0])).to eq(
-        {
-          'avg_rating' => 5.0
-        }
-      )
+        expect(third_rate[0]).to eq(200)
+        expect(JSON.parse(third_rate[2][0])).to eq(
+          {
+            'avg_rating' => 5.0
+          }
+        )
+      end
     end
-  end
 
-  context 'when the post id are correct and rating is out of range' do
-    it 'returns error rate is out of range with 422 status' do
-      rate_above_five = create_rating_with_data(data: {
-        post_id: first_post[:id],
-        rating: 6
-      })
+    context 'when the post id are correct and rating is out of range' do
+      it 'returns error rate is out of range with 422 status' do
+        rate_above_five = create_rating_with_data(data: {
+          post_id: first_post[:id],
+          rating: 6
+        })
 
-      rate_below_one = create_rating_with_data(data: {
-        post_id: first_post[:id],
-        rating: 0
-      })
+        rate_below_one = create_rating_with_data(data: {
+          post_id: first_post[:id],
+          rating: 0
+        })
 
-      expect(JSON.parse(rate_above_five[2][0])).to eq(
-        {
-          'errors' => {
-            'rating' => [
-              'must be between 1 and 5'
-            ]
+        expect(JSON.parse(rate_above_five[2][0])).to eq(
+          {
+            'errors' => {
+              'rating' => [
+                'must be between 1 and 5'
+              ]
+            }
           }
-        }
-      )
+        )
 
-      expect(JSON.parse(rate_below_one[2][0])).to eq(
-        {
-          'errors' => {
-            'rating' => [
-              'must be between 1 and 5'
-            ]
+        expect(JSON.parse(rate_below_one[2][0])).to eq(
+          {
+            'errors' => {
+              'rating' => [
+                'must be between 1 and 5'
+              ]
+            }
           }
-        }
-      )
+        )
+      end
     end
-  end
 
-  context 'when the post id is not found' do
-    it 'returns error rate is out of range with 422 status' do
-      response = create_rating_with_data(data: {
-        post_id: first_post[:id] + 1000,
-        rating: 5
-      })
+    context 'when the post id is not found' do
+      it 'returns error rate is out of range with 422 status' do
+        response = create_rating_with_data(data: {
+          post_id: first_post[:id] + 1000,
+          rating: 5
+        })
 
-      expect(JSON.parse(response[2][0])).to eq(
-        {
-          'errors' => {
-            'post_id' => [
-              'The post must be existed'
-            ]
+        expect(JSON.parse(response[2][0])).to eq(
+          {
+            'errors' => {
+              'post_id' => [
+                'The post must be existed'
+              ]
+            }
           }
-        }
-      )
+        )
+      end
     end
   end
 end

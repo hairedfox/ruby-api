@@ -16,27 +16,29 @@ RSpec.describe AuthenticationsController, type: :controller do
     user
   end
 
-  context 'when the username is correct' do
-    it 'returns the access_token' do
-      request = instance_double(Rack::Request)
-      allow(request).to receive_message_chain(:body, :readlines, :join).and_return({ 'username' => user.username }.to_json)
-      response = AuthenticationsController.new(request).create
+  describe '#create' do
+    context 'when the username is correct' do
+      it 'returns the access_token' do
+        request = instance_double(Rack::Request)
+        allow(request).to receive_message_chain(:body, :readlines, :join).and_return({ 'username' => user.username }.to_json)
+        response = AuthenticationsController.new(request).create
 
-      expect(response[0]).to eq(200)
-      expect(response[1]).to eq({ 'Content-Type' => 'application/json' })
-      expect(JSON.parse(response.dig(2, 0).to_s)).to match({ 'access_token' => anything })
+        expect(response[0]).to eq(200)
+        expect(response[1]).to eq({ 'Content-Type' => 'application/json' })
+        expect(JSON.parse(response.dig(2, 0).to_s)).to match({ 'access_token' => anything })
+      end
     end
-  end
 
-  context 'when the username is wrong' do
-    it 'returns 404' do
-      request = instance_double(Rack::Request)
-      allow(request).to receive_message_chain(:body, :readlines, :join).and_return({ 'username' => 'sample name' }.to_json)
-      response = AuthenticationsController.new(request).create
+    context 'when the username is wrong' do
+      it 'returns 404' do
+        request = instance_double(Rack::Request)
+        allow(request).to receive_message_chain(:body, :readlines, :join).and_return({ 'username' => 'sample name' }.to_json)
+        response = AuthenticationsController.new(request).create
 
-      expect(response[0]).to eq(404)
-      expect(response[1]).to eq({ 'Content-Type' => 'application/json' })
-      expect(JSON.parse(response[2][0])).to match({ 'error' => 'user_not_found' })
+        expect(response[0]).to eq(404)
+        expect(response[1]).to eq({ 'Content-Type' => 'application/json' })
+        expect(JSON.parse(response[2][0])).to match({ 'error' => 'user_not_found' })
+      end
     end
   end
 end
