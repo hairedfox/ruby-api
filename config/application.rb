@@ -3,6 +3,7 @@ require_relative '../app/controllers/authentications_controller.rb'
 require_relative '../app/controllers/posts_controller.rb'
 require_relative '../app/controllers/ratings_controller.rb'
 require_relative '../app/controllers/feedbacks_controller.rb'
+require_relative '../app/controllers/users_controller.rb'
 
 class Application
   def call(env)

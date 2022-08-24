@@ -9,6 +9,11 @@ class User < Dry::Struct
   class << self
     include GlobalActions
 
+    def group_by_ips
+      collection.all.group_by { |user| user[:ip_address] }
+                .reduce([]) { |arr, (k, v)| arr << { ip_address: k, authors: v }; arr }
+    end
+
     def where(**args)
       collection.where(**args)
     end
