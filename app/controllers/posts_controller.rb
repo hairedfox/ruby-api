@@ -16,6 +16,6 @@ class PostsController < BaseController
 
     return response_with(code: 200, data: [result[:data].to_json]) if result[:success]
 
-    response_with(code: 422, data: [{errors: result[:errors] }.to_json])
+    response_with(code: 422, data: [{ errors: result[:errors] }.to_json])
   end
 end

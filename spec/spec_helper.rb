@@ -15,6 +15,7 @@
 # See https://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
   require 'dotenv/load'
+  require 'sequel'
   require 'factory_bot'
 
   Dotenv.load
@@ -105,5 +106,13 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     FactoryBot.find_definitions
+  end
+
+  config.before(:all) do
+    db = Sequel.connect(ENV['TEST_DB_URL'])
+
+    [:ratings, :posts, :users, :feedbacks].each do |table|
+      db.run "DELETE FROM #{table};"
+    end
   end
 end

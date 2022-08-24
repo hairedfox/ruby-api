@@ -17,6 +17,8 @@ class BaseController
       token = request.env['HTTP_AUTHORIZATION'].split(' ')[1]
 
       AuthorizationService.call(token)
+    rescue
+      nil
     end
   end
 
